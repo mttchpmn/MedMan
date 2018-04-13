@@ -1,0 +1,25 @@
+{
+  "name": "medman",
+  "version": "1.0.0",
+  "description": "CLI Media Manager for clean organisation of media on filesystem",
+  "main": "index.js",
+  "bin": {
+    "medman": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mttchpmn/medman.git"
+  },
+  "author": "Matt Chapman",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.14.1"
+  },
+  "bugs": {
+    "url": "https://github.com/mttchpmn/medman/issues"
+  },
+  "homepage": "https://github.com/mttchpmn/medman#readme"
+}
