@@ -29,7 +29,8 @@ const MedMan = {
         
         getIdentifier: function (fname, callback) {
             let re = /s\d{2}e\d{2}/gi;
-            let ident = fname.match(re);
+            let arr = fname.match(re);
+            let ident = arr[0].toUpperCase();
             callback(null, ident);
         },
 
