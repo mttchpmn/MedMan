@@ -20,6 +20,6 @@ CLI Media Manager for keeping files organised
   Silicon.Valley.XAVCD.WEBDL.S01E06.720P.Yify.mp4
   ```
 * Invoke medman's ```season``` function, and pass in the series name
-* ```$ medman season 'Silicon Valley'
+* ```$ medman season 'Silicon Valley'```
 * medman will grab the episode identifier of each file and rename to ```Silicon Valley - S01E01.mp4``` for example
 * This matches the format required by Plex media server
