@@ -29,9 +29,11 @@ const MedMan = {
         
         getIdentifier: function (fname, callback) {
             // 'S01E03' or '2x04'
-            let altID = fname.match(/\d{1}x\d{2}/gi)[0] || null;
+            let altID = fname.match(/\d{1}x\d{2}/gi) || undefined;
+            console.log('fname :', fname);
+            console.log('altID :', altID);
             if (altID) {
-                let nums = altID.toUpperCase().split('X');
+                let nums = altID[0].toUpperCase().split('X');
                 let id = `S0${nums[0]}E${nums[1]}`;
                 return callback(null, id);
             }
