@@ -28,7 +28,8 @@ const MedMan = {
         },
         
         getIdentifier: function (fname, callback) {
-            let re = /s\d{2}e\d{2}/gi;
+            // 'S01E03' or '2x04'
+            let re = /s\d{2}e\d{2}|\d{1}x\d{2}/gi;
             let arr = fname.match(re);
             let ident = arr[0].toUpperCase();
             callback(null, ident);
