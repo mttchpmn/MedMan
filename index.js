@@ -6,6 +6,7 @@ const program = require('commander');
 
 const MedMan = {
     rename: {
+        isPreview: false,
 
         getInfo(seriesName, callback) {
             const cwd = process.cwd();
@@ -27,33 +28,46 @@ const MedMan = {
             return validExtensions.includes(extension);
         },
         
-        getIdentifier(fname, callback) {
+        getIdentifier(fname, cb) {
             let altID = fname.match(/\d{1}x\d{2}/gi) || undefined;
             // console.log('fname :', fname); // DEBUG
             // console.log('altID :', altID); // DEBUG
             if (altID) {
                 let nums = altID[0].toUpperCase().split('X');
                 let id = `S0${nums[0]}E${nums[1]}`;
-                return callback(null, id);
+                return cb(null, id);
             }
             let re = /s\d{2}e\d{2}/gi;
             let arr = fname.match(re);
             let ident = arr[0].toUpperCase();
-            callback(null, ident);
+            cb(null, ident);
         },
 
-        parseFiles(infoObject, callback) {
+        parseFile(fname, seriesName, cb) {
+            if (this.isMedia(fname)) {
+                this.getIdentifier(fname, (err, res) => {
+                    let newName = `${seriesName} - ${res}${fname.slice(-4)}`;
+                    if (!this.isPreview) fs.renameSync(fname, newName);
+                    console.log(`${fname.padEnd(40, ' ')}  =======>  ${newName.padStart(40, ' ')}`);
+                    cb(null);
+                });
+            }
+        },
 
-            for (let index in infoObject.files) {
-                let fname = infoObject.files[index];
-                
-                if (this.isMedia(fname)) {
-                    this.getIdentifier(fname, (err, res) => {
-                        let newName = `${infoObject.seriesName} - ${res}${fname.slice(-4)}`;
-                        fs.renameSync(fname, newName);
-                        console.log(`${fname} was renamed to ${newName}`);
-                    });
-                }
+        parseDirectory(infoObject, callback) {
+
+            for (let fname of infoObject.files) {
+                this.parseFile(fname, infoObject.seriesName, (err, res) => {
+                });
+
+
+                // if (this.isMedia(fname)) {
+                //     this.getIdentifier(fname, (err, res) => {
+                //         let newName = `${infoObject.seriesName} - ${res}${fname.slice(-4)}`;
+                //         fs.renameSync(fname, newName);
+                //         console.log(`${fname} was renamed to ${newName}`);
+                //     });
+                // }
             }
         },
 
@@ -62,7 +76,7 @@ const MedMan = {
                 if (err) {
                     console.error(err);
                 }
-                this.parseFiles(res);
+                this.parseDirectory(res);
             });
         }
     }
@@ -70,7 +84,7 @@ const MedMan = {
 
 const Main = {
     rename: (seriesName, cmd) => {
-        console.log(cmd.recursive);
+        MedMan.rename.isPreview = cmd.preview;
         MedMan.rename.run(seriesName);
     }
 };
@@ -78,6 +92,7 @@ const Main = {
 program
     .command('rename <seriesName>')
     .option('-r, --recursive', 'Rename recursively')
+    .option('-p, --preview', 'Preview renaming without changing files')
     .description('Tidies up filenames of episodes in current working directory')
     .action(Main.rename);
 
