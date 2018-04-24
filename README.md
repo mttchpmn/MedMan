@@ -1,7 +1,12 @@
 # MedMan
-CLI Media Manager for keeping files organised
+CLI Media Manager for renaming media files in folders
 
 ## Installation
+
+### NPM
+* npm install -g medman
+
+### Manual
 
 * Clone or download repo to your local machine
 * cd into 'medman' directory
@@ -19,7 +24,9 @@ CLI Media Manager for keeping files organised
   Silicon.Valley.XAVCD.WEBDL.S01E05.720P.Yify.mp4
   Silicon.Valley.XAVCD.WEBDL.S01E06.720P.Yify.mp4
   ```
-* Invoke medman's ```season``` function, and pass in the series name
+* Invoke medman's ```rename``` function, and pass in the series name
 * ```$ medman season 'Silicon Valley'```
 * medman will grab the episode identifier of each file and rename to ```Silicon Valley - S01E01.mp4``` for example
 * This matches the format required by Plex media server
+* To preview changes without writing new filenames, use ```-p``` or ```--preview``` flag
+* To rename files inside folders 1 level down, use ```-r``` or ```--recursive``` flag
