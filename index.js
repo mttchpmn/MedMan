@@ -69,42 +69,30 @@ const MedMan = {
             }
         },
 
-        run(seriesName) {
-            const topDir = process.cwd();
-
-            console.log(`\nRenaming files in ${topDir}`);
-            this.getInfo(seriesName, topDir, (err, res) => {
+        renameDirectory(seriesName, path) {
+            console.log(`\nRenaming files in ${path}`);
+            this.getInfo(seriesName, path, (err, res) => {
                 if (err) {
                     console.error(err);
                 }
                 this.parseDirectory(res);
             });
+        },
+
+        run(seriesName) {
+
+            const topDir = process.cwd();
+
+            this.renameDirectory(seriesName, topDir);
 
             if (this.isRecursive) {
                 for (const path of fs.readdirSync(topDir)) {
-
                     if (this.isDirectory(path, topDir)) {
-                        console.log(`\nRenaming files in ${topDir}/${path}`);
-                        this.getInfo(seriesName, path, (err, res) => {
-                            if (err) {
-                                console.error(err);
-                            }
-                            this.parseDirectory(res);
-                        });
+                        this.renameDirectory(seriesName, path);
                     }
                 }
             }
-
         },
-
-        renameDirectory(seriesName) {
-            this.getInfo(seriesName, (err, res) => {
-                if (err) {
-                    console.error(err);
-                }
-                this.parseDirectory(res);
-            });
-        }
     }
 };
 
