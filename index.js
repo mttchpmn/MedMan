@@ -69,13 +69,15 @@ const MedMan = {
 };
 
 const Main = {
-    rename: seriesName => {
+    rename: (seriesName, cmd) => {
+        console.log(cmd.recursive);
         MedMan.rename.run(seriesName);
     }
 };
 
 program
     .command('rename <seriesName>')
+    .option('-r, --recursive', 'Rename recursively')
     .description('Tidies up filenames of episodes in current working directory')
     .action(Main.rename);
 
