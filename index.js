@@ -7,7 +7,7 @@ const program = require('commander');
 const MedMan = {
     season: {       
 
-        getInfo: function (seriesName, callback) {
+        getInfo(seriesName, callback) {
             const cwd = process.cwd();
             const filesArray = fs.readdirSync(cwd);
             callback(null, {
@@ -17,7 +17,7 @@ const MedMan = {
             });
         },
 
-        isMedia: function (fname) {
+        isMedia(fname) {
             const validExtensions = [
                 "avi",
                 "mp4",
@@ -27,7 +27,7 @@ const MedMan = {
             return validExtensions.includes(extension);
         },
         
-        getIdentifier: function (fname, callback) {
+        getIdentifier(fname, callback) {
             let altID = fname.match(/\d{1}x\d{2}/gi) || undefined;
             // console.log('fname :', fname); // DEBUG
             // console.log('altID :', altID); // DEBUG
@@ -42,7 +42,7 @@ const MedMan = {
             callback(null, ident);
         },
 
-        parseFiles: function (infoObject, callback) {
+        parseFiles(infoObject, callback) {
 
             for (let index in infoObject.files) {
                 let fname = infoObject.files[index];
@@ -57,7 +57,7 @@ const MedMan = {
             }
         },
 
-        run: function (seriesName) {
+        run(seriesName) {
             this.getInfo(seriesName, (err, res) => {
                 if (err) {
                     console.error(err);
