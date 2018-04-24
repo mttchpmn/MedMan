@@ -112,3 +112,5 @@ program
     .action(Main.rename);
 
 program.parse(process.argv);
+
+module.exports = MedMan;
