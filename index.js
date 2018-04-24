@@ -81,7 +81,7 @@ const MedMan = {
                     let newName = `${infoObject.seriesName} - ${res}${fname.slice(-4)}`;
 
                     // Do the rename if '--preview' flag is not present
-                    if (!this.isPreview) fs.renameSync(`${infoObject.dir}/${fname}`, newName);
+                    if (!this.isPreview) fs.renameSync(`${infoObject.dir}/${fname}`, `${infoObject.dir}/${newName}`);
 
                     // Callback with the transformation info
                     cb(null, `${fname.padEnd(50, ' ')}  =======>  ${newName.padStart(50, ' ')}`);
