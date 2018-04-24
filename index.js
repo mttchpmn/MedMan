@@ -7,39 +7,47 @@ const program = require('commander');
 const MedMan = {
     rename: {
         isPreview: false,
+        isRecursive: false,
 
-        getInfo(seriesName, callback) {
-            const cwd = process.cwd();
-            const filesArray = fs.readdirSync(cwd);
+        getInfo(seriesName, dir,  callback) {
+            const filesArray = fs.readdirSync(dir);
+
             callback(null, {
-                dir: cwd,
+                dir: dir,
                 files: filesArray,
                 seriesName: seriesName
             });
+        },
+
+        isDirectory(fname, cwd) {
+            return fs.lstatSync(`${cwd}/${fname}`).isDirectory();
         },
 
         isMedia(fname) {
             const validExtensions = [
                 "avi",
                 "mp4",
-                "mkv"
+                "mkv",
+                "mpg"
             ];
             let extension = fname.slice(-3);
+
             return validExtensions.includes(extension);
         },
         
         getIdentifier(fname, cb) {
             let altID = fname.match(/\d{1}x\d{2}/gi) || undefined;
-            // console.log('fname :', fname); // DEBUG
-            // console.log('altID :', altID); // DEBUG
+
             if (altID) {
                 let nums = altID[0].toUpperCase().split('X');
                 let id = `S0${nums[0]}E${nums[1]}`;
                 return cb(null, id);
             }
+
             let re = /s\d{2}e\d{2}/gi;
             let arr = fname.match(re);
             let ident = arr[0].toUpperCase();
+
             cb(null, ident);
         },
 
@@ -55,23 +63,41 @@ const MedMan = {
         },
 
         parseDirectory(infoObject, callback) {
-
             for (let fname of infoObject.files) {
                 this.parseFile(fname, infoObject.seriesName, (err, res) => {
                 });
-
-
-                // if (this.isMedia(fname)) {
-                //     this.getIdentifier(fname, (err, res) => {
-                //         let newName = `${infoObject.seriesName} - ${res}${fname.slice(-4)}`;
-                //         fs.renameSync(fname, newName);
-                //         console.log(`${fname} was renamed to ${newName}`);
-                //     });
-                // }
             }
         },
 
         run(seriesName) {
+            const topDir = process.cwd();
+
+            console.log(`\nRenaming files in ${topDir}`);
+            this.getInfo(seriesName, topDir, (err, res) => {
+                if (err) {
+                    console.error(err);
+                }
+                this.parseDirectory(res);
+            });
+
+            if (this.isRecursive) {
+                for (const path of fs.readdirSync(topDir)) {
+
+                    if (this.isDirectory(path, topDir)) {
+                        console.log(`\nRenaming files in ${topDir}/${path}`);
+                        this.getInfo(seriesName, path, (err, res) => {
+                            if (err) {
+                                console.error(err);
+                            }
+                            this.parseDirectory(res);
+                        });
+                    }
+                }
+            }
+
+        },
+
+        renameDirectory(seriesName) {
             this.getInfo(seriesName, (err, res) => {
                 if (err) {
                     console.error(err);
@@ -85,6 +111,7 @@ const MedMan = {
 const Main = {
     rename: (seriesName, cmd) => {
         MedMan.rename.isPreview = cmd.preview;
+        MedMan.rename.isRecursive = cmd.recursive;
         MedMan.rename.run(seriesName);
     }
 };
