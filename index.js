@@ -5,7 +5,7 @@ const fs = require('fs');
 const program = require('commander');
 
 const MedMan = {
-    season: {       
+    rename: {
 
         getInfo(seriesName, callback) {
             const cwd = process.cwd();
@@ -69,14 +69,14 @@ const MedMan = {
 };
 
 const Main = {
-    season: seriesName => {
-        MedMan.season.run(seriesName);
+    rename: seriesName => {
+        MedMan.rename.run(seriesName);
     }
 };
 
 program
-    .command('season <seriesName>')
+    .command('rename <seriesName>')
     .description('Tidies up filenames of episodes in current working directory')
-    .action(Main.season);
+    .action(Main.rename);
 
 program.parse(process.argv);
