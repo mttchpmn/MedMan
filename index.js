@@ -67,7 +67,7 @@ const MedMan = {
         },
 
         // Check if file is media and rename it if so
-        parseFile(fname, seriesName, cb) {
+        parseFile(fname, infoObject, cb) {
             if (this.isMedia(fname)) {
                 this.getIdentifier(fname, (err, res) => {
 
@@ -78,10 +78,10 @@ const MedMan = {
                     }
 
                     // Generate new name in line with Plex format
-                    let newName = `${seriesName} - ${res}${fname.slice(-4)}`;
+                    let newName = `${infoObject.seriesName} - ${res}${fname.slice(-4)}`;
 
                     // Do the rename if '--preview' flag is not present
-                    if (!this.isPreview) fs.renameSync(fname, newName);
+                    if (!this.isPreview) fs.renameSync(`${infoObject.dir}/${fname}`, newName);
 
                     // Callback with the transformation info
                     cb(null, `${fname.padEnd(50, ' ')}  =======>  ${newName.padStart(50, ' ')}`);
@@ -93,7 +93,7 @@ const MedMan = {
 
             // Parse each file in the array of files from the current directory
             for (let fname of infoObject.files) {
-                this.parseFile(fname, infoObject.seriesName, (err, res) => {
+                this.parseFile(fname, infoObject, (err, res) => {
                     // Log the transformed file info
                     console.log(res);
                 });
@@ -124,7 +124,7 @@ const MedMan = {
             if (this.isRecursive) {
                 for (const path of fs.readdirSync(topDir)) {
                     if (this.isDirectory(path, topDir)) {
-                        this.renameDirectory(seriesName, path);
+                        this.renameDirectory(seriesName, `${topDir}/${path}`);
                     }
                 }
             }
